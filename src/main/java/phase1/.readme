@@ -1,0 +1,182 @@
+Phase 1 — Core Java
+Topic 1: SOLID Principles
+SOLID is a set of five software design principles that help developers write code that is easier to maintain, extend, test and modify.
+
+Why do companies care?
+
+Imagine you're working on an Amazon-like e-commerce application. Initially, it supports credit card payments. Later, the company wants UPI, PayPal and other payment methods.
+
+If your code is poorly designed, adding a new payment method might require modifying several existing classes.
+
+SOLID helps prevent that.
+The five principles
+S
+Single Responsibility Principle
+
+One class = one responsibility
+
+
+
+O
+Open/Closed Principle
+
+Open for extension, closed for modification
+
+
+
+L
+Liskov Substitution Principle
+
+Child classes should work wherever their parent is expected
+
+
+
+I
+Interface Segregation Principle
+
+Don't force classes to implement methods they don't need
+
+
+
+D
+Dependency Inversion Principle
+
+Depend on abstractions, not concrete implementations
+
+
+
+1. S — Single Responsibility Principle (SRP)
+Definition: A class should have only one reason to change.
+
+Imagine an application that manages customer orders.
+
+A badly designed class:
+class Order {
+
+    public void createOrder() {
+        System.out.println("Order created");
+    }
+
+    public void saveToDatabase() {
+        System.out.println("Saved to database");
+    }
+
+    public void sendEmail() {
+        System.out.println("Email sent");
+    }
+
+    public void generateInvoice() {
+        System.out.println("Invoice generated");
+    }
+}
+
+
+What's wrong?
+
+This class has four responsibilities:
+- Order creation
+- Database operations
+- Email notifications
+- Invoice generation
+If email functionality changes, we must modify the same class that handles orders.
+
+Better design:
+class OrderService {
+    public void createOrder() {
+        System.out.println("Order created");
+    }
+}
+
+class OrderRepository {
+    public void saveToDatabase() {
+        System.out.println("Saved to database");
+    }
+}
+
+class EmailService {
+    public void sendEmail() {
+        System.out.println("Email sent");
+    }
+}
+
+class InvoiceService {
+    public void generateInvoice() {
+        System.out.println("Invoice generated");
+    }
+}
+
+
+Now each class has one main responsibility.
+
+Real-world Spring Boot connection:
+Class	Responsibility
+OrderController	Handle HTTP requests
+OrderService	Business logic
+OrderRepository	Database operations
+EmailService	Send emails
+
+Interview question: What is the benefit of SRP?
+
+Answer: It improves maintainability, testability and reduces the impact of changes.
+
+2. O — Open/Closed Principle (OCP)
+Definition: Software entities should be open for extension but closed for modification.
+
+Imagine an application supporting different payment methods.
+
+Bad approach:
+class PaymentService {
+
+    public void pay(String type) {
+
+        if (type.equals("UPI")) {
+            System.out.println("Pay using UPI");
+        }
+        else if (type.equals("CARD")) {
+            System.out.println("Pay using Card");
+        }
+    }
+}
+
+
+What happens when we introduce PayPal?
+
+We must modify the existing class.
+
+Better approach:
+interface Payment {
+    void pay();
+}
+
+
+class UpiPayment implements Payment {
+
+    public void pay() {
+        System.out.println("Pay using UPI");
+    }
+}
+
+
+class CardPayment implements Payment {
+
+    public void pay() {
+        System.out.println("Pay using Card");
+    }
+}
+
+
+class PaypalPayment implements Payment {
+
+    public void pay() {
+        System.out.println("Pay using PayPal");
+    }
+}
+
+
+Now each new payment method can be introduced as a new implementation.
+
+Real-world example: Adding a new payment gateway without rewriting your existing payment service.
+
+Interview question: How does OCP help in Spring Boot?
+
+Answer: We can introduce new service implementations through interfaces and dependency injection without continuously modifying existing business logic.
